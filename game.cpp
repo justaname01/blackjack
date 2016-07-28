@@ -212,7 +212,7 @@ int prettyPrintDeck(Deck d)
 				sumValue += FACE_VALUE;
 				break;
 			default:
-				std::cout << "A very weird card, which shouldn't even exist."
+				std::cout << "A very weird card, which shouldn't even exist.";
 				break;
 		}
 		
