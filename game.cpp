@@ -71,6 +71,7 @@ void game()
 	
 	player.clearDeck();	//clear the player's hand
 	dealer.clearDeck();	//clear the dealer's hand
+	deck.shuffle();		//shuffle the deck
 	int gameVal = 0;
 	
 	bool player_turn = true;
