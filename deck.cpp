@@ -87,7 +87,7 @@ void Deck::sortDeck()
 		sorted = true;
 }
 
-deque<Card> Deck::getDeck()
+std::deque<Card> Deck::getDeck()
 {
 	return cards;
 }
