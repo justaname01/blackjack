@@ -18,6 +18,7 @@ class Deck
 		void putCard( Card );	//put a card in the deck
 		void prettyPrint();	//pretty printing!
 		void sortDeck();	//sort the deck
+		std::deque<Card> getDeck();
 };
 
 #endif //DECK_H
