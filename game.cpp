@@ -7,6 +7,7 @@
 
 char menu();
 void game();
+char deal();
 
 int prettyPrintDeck(Deck);
 
