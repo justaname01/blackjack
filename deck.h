@@ -19,6 +19,7 @@ class Deck
 		void prettyPrint();	//pretty printing!
 		void sortDeck();	//sort the deck
 		std::deque<Card> getDeck();
+		int getValue();		//returns the value of the cards in the deck.
 };
 
 #endif //DECK_H

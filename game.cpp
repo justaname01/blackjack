@@ -1,130 +1,99 @@
-//includes
 #include <iostream>
 #include <limits>
 #include "card.h"
 #include "deck.h"
 
-//defines	
-#define BANK 21	//I seem to recall another name for the game as being "21"
+#define BANK 21
 
-//prototypes
-char menu();	//menu
-void game();	//game loop (where the game logic is)
-char deal();	//deal or hold
+char menu();
+void game();
+char deal();
 
-int prettyPrintDeck(Deck);	//print out the deck and return the sum of the cards in it
+int prettyPrintDeck(Deck);
 
-//main
-int main()	//no parameters
+int main()
 {
-	//show the menu, return the choice
 	char c = menu();
 	
-	//switch accordingly
 	switch(c)
 	{
-		//case 'p'lay
 		case 'p':
-			game();	//play the game
+			game();
 			break;
-		//case 'q'uit
 		case 'q':
-		//default case
 		default:
-			break;	//let the code proceed to the exit
+			break;
 	}
 
-	//return code 'all is well'
 	return 0;
 }
 
-//menu
 char menu()
 {
-	//is valid choice?
 	bool isValid = false;
-	//choice/return value
 	char choice(0);
 
 	do
 	{
-		//print the menu to the terminal
 		std::cout << "Let\'s play Blackjack!\n";
 		std::cout << "Menu:\n";
 		std::cout << "\n\n\n";
 		std::cout << "(p)lay\n";
 		std::cout << "(q)uit\n" << std::endl;
-		std::cout << "==> ";			//show the prompt
+		std::cout << "==> ";
 
-		//read the choice
 		std::cin >> choice;
 		
 		//clear out cin
 		if(std::cin.bad())
 			std::cin.clear();
-		//if any extra characters were entered, ignore them
 		std::cin.ignore( std::numeric_limits<std::streamsize>::max(),'\n' );
 		
-		//switch based on character read
 		switch(choice)
 		{
-			//any of the valid choices
 			case 'p':
 			case 'q':
 				isValid = true;
 				break;
-			//anything else
 			default:
 				break;
 		}
-	}while( !isValid );	//do all this while waiting for a valid choice to be entered
+	}while( !isValid );
 
-	//return the valid choice
 	return choice;
 }
 
-//game loop!
 void game()
 {
-	//3 decks so far. 1 for the source, 2 for the players
 	Deck deck;		//the main deck
 	Deck dealer;		//for keeping track of the dealer's hand
 	Deck player;		//for keeping track of the player's hand
 	
-	/*
-	 * More on the above: my original thinking has been to handle dealing to the player here, in game().
-	 * Do you think that I should try to refactor some of this into a player type, then put down 2 players 
-	 * for the game?
-	 */
+	player.clearDeck();	//clear the player's hand
+	dealer.clearDeck();	//clear the dealer's hand
+	deck.shuffle();		//shuffle the deck
+	int STAY = 17;
 	
-	
-	player.clearDeck();		//clear the player's hand
-	dealer.clearDeck();		//clear the dealer's hand
-	deck.shuffle();			//shuffle the deck
-	int player_deck_value = 0;	//value of the player's
-	
-	bool player_turn = true;	//player turn
+	bool player_turn = true;
 	
 	//game loop
 	do 
 	{
-		//add 3 lines of separation
 		std::cout << "\n\n\n";
 		
-		//prompt and print
 		std::cout << "You have:\n";
-		player_deck_value = prettyPrintDeck(player);
+		prettyPrintDeck(player);
 		
-		std::cout << "\nThe deck has a value of " << player_deck_value;
+		std::cout << "\nThe deck has a value of " << player.getValue();
 		
 		//exit cases
-		if(player_deck_value == BANK)
+		if(player.getValue() == BANK)
 		{
-			std::cout << "\n\nWinner!\n";
+			std::cout << "\n\nYou win!!!\n";
 			break;
-		}else if(player_deck_value > BANK)
+		}else if(player.getValue() > BANK)
 		{
-			std::cout << "\n\nLoser!\n";
+			std::cout << "\n\nYou lose!!!\n";
 			break;
 		}
 		
@@ -143,7 +112,23 @@ void game()
 			default:
 				break;
 		}
-	}while(player_deck_value <= BANK && player_turn);
+	}while(player.getValue() <= BANK && player_turn);
+
+	//ai turn. Don't run if player already lost.
+	if(player.getValue() > BANK)
+		return;
+	//now, from some light googling, I came across the "hit if less than 17", so:
+	while(dealer.getValue() < STAY)
+	{
+		dealer.putCard(deck.draw());
+	}
+
+	if(dealer.getValue() > BANK)
+		std::cout << "Dealer busted. You win!!!\n";
+	else if(dealer.getValue() > player.getValue()) //if we get this far, then the player failed to get a 21
+		std::cout << "Dealer got " << dealer.getValue() << ". You lose!!!\n";
+	else
+		std::cout << "Dealer got " << dealer.getValue() << ". You win!!!\n";
 }
 
 char deal()
@@ -186,7 +171,7 @@ int prettyPrintDeck(Deck d)
 	int nAces = 0;
 	const int FACE_VALUE = 10;
 	
-	deque<Card> cardDeck = d.getDeck();
+	std::deque<Card> cardDeck = d.getDeck();
 	for(int index = 0; index < cardDeck.size(); index++)
 	{
 		switch( cardDeck.at(index).getRank() )
