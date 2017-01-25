@@ -30,27 +30,46 @@ Card Card::getCard( Suit suit, Rank rank )
 	return Card( suit, rank );
 }
 
-Suit Card::getSuit()
+Suit Card::getSuit() const
 {
 	return suit;
 }
 
-Rank Card::getRank()
+Rank Card::getRank() const
 {
 	return rank;
 }
 
-/*bool operator==(const Card& lhs, const Card& rhs)
+bool Card::operator==(const Card& rhs)
 {
-	return (lhs.getSuit() == rhs.getSuit() && lhs.getRank() == rhs.getRank());
+	//base operator. Suits aren't counted in valuing the card.
+	return getRank() == rhs.getRank();
 }
 
-bool operator!=(const Card& lhs, const Card& rhs)
+bool Card::operator!=(const Card& rhs)
 {
-	return !(lhs == rhs);
+	//defined in terms of ==, to build upwards
+	return !((*this) == rhs);
 }
 
-bool operator>(const Card& lhs, const Card& rhs)
+bool Card::operator>(const Card& rhs)
 {
-	return ()
-}*/
+	//defined in terms of < and ==, so as to build upwards.
+	return !(((*this) < rhs) || ((*this) == rhs));
+}
+
+bool Card::operator<(const Card& rhs)
+{
+	return getRank() < rhs.getRank();
+}
+
+bool Card::operator>=(const Card& rhs)
+{
+	//defined in terms of a base operator
+	return !((*this) < rhs);
+}
+
+bool Card::operator<=(const Card& rhs)
+{
+	return ((*this) < rhs || (*this) == rhs);
+}

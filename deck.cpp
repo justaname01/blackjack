@@ -3,7 +3,6 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include <iostream>
 
 //typedefs, for convenience
 
@@ -114,4 +113,52 @@ void Deck::fillDeck()
 void Deck::clearDeck()
 {
 	cards.clear();
+}
+
+int Deck::getValue()
+{
+	int sumValue = 0;
+	int nAces = 0;
+	const int FACE_VALUE = 10;
+	
+	for(int index = 0; index < cards.size(); index++)
+	{
+		switch( cards.at(index).getRank() )
+		{
+			case NUM01:
+			case NUM02:
+			case NUM03:
+			case NUM04:
+			case NUM05:
+			case NUM06:
+			case NUM07:
+			case NUM08:
+			case NUM09:
+				sumValue += static_cast<int>(cards.at(index).getRank());
+				break;
+			case ACE:
+				nAces++;
+				break;
+			case JACK:
+			case QUEEN:
+			case KING:
+				sumValue += FACE_VALUE;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	#define ACE_HIGH 11
+	#define ACE_LOW 1
+	#define BANK 21
+	for(int counter = 0; counter < nAces; counter++)
+	{
+		if( sumValue + ACE_HIGH > BANK )
+			sumValue += ACE_LOW;
+		else
+			sumValue += ACE_HIGH;
+	}
+	
+	return sumValue;
 }

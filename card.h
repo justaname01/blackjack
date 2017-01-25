@@ -21,18 +21,16 @@ class Card
 		static Card getClub( Rank );
 		static Card getDiamond( Rank );
 		static Card getCard( Suit, Rank );
-		Suit getSuit();
-		Rank getRank();
+		Suit getSuit() const;
+		Rank getRank() const;
 
+		//relational operators
+		bool operator==(const Card&);
+		bool operator!=(const Card&);
+		bool operator>(const Card&);
+		bool operator<(const Card&);
+		bool operator>=(const Card&);
+		bool operator<=(const Card&);
 };
-
-
-//relational operators
-/*bool operator==(const Card&, const Card&);
-bool operator!=(const Card&, const Card&);
-bool operator>(const Card&, const Card&);
-bool operator<(const Card&, const Card&);
-bool operator>=(const Card&, const Card&);
-bool operator<=(const Card&, const Card&);*/
 
 #endif
